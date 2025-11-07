@@ -89,7 +89,8 @@ def render_midi_to_audio(
     midi_path: pathlib.Path,
     out_dir: pathlib.Path,
     soundfont_path: pathlib.Path,
-    generate_mp3: bool = True,
+    generate_wav: bool = False,
+    generate_mp3: bool = False,
     sample_rate: int = 44100,
     mp3_bitrate: str = "192k",
 ) -> dict:
@@ -128,10 +129,12 @@ def render_midi_to_audio(
         sample_rate=sample_rate,
     )
 
-    result = {"wav": wav_path}
+    result = {"wav": wav_path} if generate_wav else dict()
     if generate_mp3:
         mp3_path = out_dir / f"{midi_path.stem}.mp3"
-    mp3_path = wav_to_mp3(wav_path, mp3_path, bitrate=mp3_bitrate)
-    result["mp3"] = mp3_path
+        mp3_path = wav_to_mp3(wav_path, mp3_path, bitrate=mp3_bitrate)
+        result["mp3"] = mp3_path
+
+    print(f"result is {result}")
 
     return result

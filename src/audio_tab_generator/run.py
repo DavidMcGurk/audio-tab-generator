@@ -43,9 +43,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to a .sf2 SoundFont. Default is an acoustic guitar",
     )
     parser.add_argument(
-        "--no-mp3",
+        "--gen-wav",
         action="store_true",
-        help="Skip MP3 creation – only generate the intermediate WAV.",
+        help="Additionally generates WAV audio from the midi file.",
+    )
+    parser.add_argument(
+        "--gen-mp3",
+        action="store_true",
+        help="Additionally generated MP3 audio from the midi file.",
     )
 
     # Basic‑pitch hyper‑parameters (optional – keep defaults if you don't need them)
@@ -84,24 +89,27 @@ def main(argv: list[str] | None = None) -> int:
     print(f"MIDI written to {midi_path}")
 
     # Render → WAV / MP3
-    try:
-        render_result = render_midi_to_audio(
-            midi_path=midi_path,
-            out_dir=out_dir,
-            soundfont_path=soundfont,
-            generate_mp3=not args.no_mp3,
-        )
-    except Exception as exc:
-        print(f"Rendering failed: {exc}", file=sys.stderr)
-        return 1
+    if args.gen_wav or args.gen_mp3:
+        try:
+            render_result = render_midi_to_audio(
+                midi_path=midi_path,
+                out_dir=out_dir,
+                soundfont_path=soundfont,
+                generate_wav=args.gen_wav,
+                generate_mp3=args.gen_mp3,
+            )
+        except Exception as exc:
+            print(f"Rendering failed: {exc}", file=sys.stderr)
+            return 1
 
     print("\n=== Summary ===")
     print(f"Input audio   : {input_path}")
     print(f"MIDI file    : {midi_path}")
-    print(f"WAV file     : {render_result['wav']}")
-    if "mp3" in render_result:
+    if args.gen_wav:
+        print(f"WAV file     : {render_result['wav']}")
+    if args.gen_mp3:
         print(f"MP3 file     : {render_result['mp3']}")
-    print(f"Detected notes: {len(note_events)} (see the raw list if you need it)")
+    print(f"Detected notes: {len(note_events)}")
 
     return 0
 

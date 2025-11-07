@@ -20,7 +20,13 @@ poetry install
 
 Then the generator can be run using:
 ```bash
-poetry run python src/audio_tab_generator/run.py -i <your-audio-file>.mp3
+poetry run python src/audio_tab_generator/run.py -i <your-audio-file>.mp3 [--gen-mp3]
+```
+Where the flags `--gen-mp3` or `--gen-wav` can be used to optionally reconstruct the midi files into audio files.
+
+For more detailed usage and options, run:
+```bash
+poetry run python src/audio_tab_generator/run.py -h
 ```
 
 ### Dev Setup
