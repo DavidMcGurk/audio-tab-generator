@@ -6,9 +6,11 @@ authors = [
     {name = "David McGurk",email = "david.mcgurk@tngtech.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.11, <3.12"
 dependencies = [
-    "pre-commit (>=4.3.0,<5.0.0)"
+    "pre-commit (>=4.3.0,<5.0.0)",
+    "numpy (>=2.3.4,<3.0.0)",
+    "basic-pitch (>=0.4.0,<0.5.0)"
 ]
 
 [tool.poetry]
