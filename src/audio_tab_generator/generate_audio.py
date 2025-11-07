@@ -135,6 +135,4 @@ def render_midi_to_audio(
         mp3_path = wav_to_mp3(wav_path, mp3_path, bitrate=mp3_bitrate)
         result["mp3"] = mp3_path
 
-    print(f"result is {result}")
-
     return result
