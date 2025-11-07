@@ -42,7 +42,7 @@ def predict_to_midi(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Run the model
-    model_output, midi_obj, note_events = predict(
+    _, midi_obj, note_events = predict(
         audio_path=audio_path,
         model_or_model_path=model_path,
         onset_threshold=onset_threshold,

@@ -16,8 +16,9 @@ import argparse
 import pathlib
 import sys
 
+from audio_tab_generator.generate_tabs import midi_to_guitar_tab
 from interpret_audio import predict_to_midi
-from construct_audio import render_midi_to_audio
+from generate_audio import render_midi_to_audio
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -34,7 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--output-dir",
         type=pathlib.Path,
         default=pathlib.Path("./src/output"),
-        help="Directory where MIDI, WAV and MP3 will be written (default: src/output).",
+        help="Directory where MIDI, Tab, WAV and MP3 will be written (default: src/output).",
     )
     parser.add_argument(
         "--soundfont",
@@ -88,6 +89,9 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"MIDI written to {midi_path}")
 
+    # Generate guitar tabs
+    tab_path = midi_to_guitar_tab(midi_path=midi_path, out_dir=out_dir)
+
     # Render → WAV / MP3
     if args.gen_wav or args.gen_mp3:
         try:
@@ -104,7 +108,8 @@ def main(argv: list[str] | None = None) -> int:
 
     print("\n=== Summary ===")
     print(f"Input audio   : {input_path}")
-    print(f"MIDI file    : {midi_path}")
+    print(f"MIDI file     : {midi_path}")
+    print(f"Tab file      : {tab_path}")
     if args.gen_wav:
         print(f"WAV file     : {render_result['wav']}")
     if args.gen_mp3:

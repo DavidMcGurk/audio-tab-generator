@@ -1,5 +1,5 @@
 # --------------------------------------------------------------
-# construct_audio.py
+# generate_audio.py
 # --------------------------------------------------------------
 """
 Render a MIDI file to WAV (using FluidSynth) and optionally convert to MP3.
