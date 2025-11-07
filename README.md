@@ -5,6 +5,8 @@ This project is designed to import audio files, and then convert them into guita
 #### Prerequisites
 - Python 3.11
 - [Poetry](https://python-poetry.org/)
+- [FluidSynth](https://github.com/FluidSynth/fluidsynth/releases)
+- [FFmpeg](https://www.ffmpeg.org/)
 
 1. **Install dependencies**
 ```bash
