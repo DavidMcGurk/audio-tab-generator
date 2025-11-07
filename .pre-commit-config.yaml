@@ -23,4 +23,4 @@ repos:
       - id: black
         language_version: python3.11
         args: [--line-length=120]
-        stages: [commit, push]
+        stages: [pre-commit, pre-push]
