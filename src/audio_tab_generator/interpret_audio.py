@@ -23,6 +23,8 @@ def predict_to_midi(
     frame_threshold: float = 0.3,
     minimum_note_length: float = 127.70,
     melodia_trick: bool = True,
+    minimum_freq: float = 80,
+    maximum_freq: float = 1700,
 ) -> Tuple[pathlib.Path, List[Tuple[float, float, int, float, Optional[List[int]]]]]:
     """
     Run ``basic_pitch.predict`` on *audio_path* and write a ``.mid`` file
