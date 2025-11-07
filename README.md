@@ -1,5 +1,5 @@
 # Audio Tab Generator
-This project is designed to import audio files, and then convert them into guitar tabs.
+This project is designed to import audio files, and then convert them into guitar tabs. Note, this is still a WIP
 
 ## Prerequisites
 - Python 3.11
