@@ -3,7 +3,7 @@ This project is designed to import audio files, and then convert them into guita
 
 ### Dev Setup
 #### Prerequisites
-- Python 3.14+
+- Python 3.11
 - [Poetry](https://python-poetry.org/)
 
 1. **Install dependencies**
