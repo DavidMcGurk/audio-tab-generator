@@ -49,6 +49,8 @@ def predict_to_midi(
         frame_threshold=frame_threshold,
         minimum_note_length=minimum_note_length,
         melodia_trick=melodia_trick,
+        minimum_frequency=minimum_freq,
+        maximum_frequency=maximum_freq,
     )
 
     # Write the MIDI file
