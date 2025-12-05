@@ -15,4 +15,4 @@ build/
 .DS_Store
 ._*
 
-src/output/
+output/

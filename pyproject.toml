@@ -14,7 +14,8 @@ dependencies = [
     "scikit-learn (==1.5.1)",
     "soundfile (>=0.13.1,<0.14.0)",
     "ffmpeg-python (>=0.2.0,<0.3.0)",
-    "pydub (>=0.25.1,<0.26.0)"
+    "pydub (>=0.25.1,<0.26.0)",
+    "pytest (>=9.0.1,<10.0.0)"
 ]
 
 [tool.poetry]

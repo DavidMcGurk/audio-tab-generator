@@ -8,7 +8,7 @@ The public function is :func:`predict_to_midi`.
 """
 
 import pathlib
-from typing import Tuple, List, Optional
+from typing import Optional
 
 from basic_pitch.inference import predict
 from basic_pitch import ICASSP_2022_MODEL_PATH
@@ -19,13 +19,13 @@ def predict_to_midi(
     out_dir: pathlib.Path | str,
     *,
     model_path: pathlib.Path | str = ICASSP_2022_MODEL_PATH,
-    onset_threshold: float = 0.5,
-    frame_threshold: float = 0.3,
-    minimum_note_length: float = 127.70,
-    melodia_trick: bool = True,
+    onset_threshold: float,
+    frame_threshold: float,
+    minimum_note_length: float,
+    melodia_trick: bool,
     minimum_freq: float = 80,
     maximum_freq: float = 1700,
-) -> Tuple[pathlib.Path, List[Tuple[float, float, int, float, Optional[List[int]]]]]:
+) -> tuple[pathlib.Path, list[tuple[float, float, int, float, Optional[list[int]]]]]:
     """
     Run ``basic_pitch.predict`` on *audio_path* and write a ``.mid`` file
     into *out_dir*.
