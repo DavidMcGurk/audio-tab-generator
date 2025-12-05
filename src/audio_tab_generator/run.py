@@ -16,9 +16,9 @@ import argparse
 import pathlib
 import sys
 
-from audio_tab_generator.generate_tabs import midi_to_guitar_tab
-from interpret_audio import predict_to_midi
-from generate_audio import render_midi_to_audio
+from audio_tab_generator.midi_to_tabs import midi_to_guitar_tab
+from audio_to_midi import predict_to_midi
+from midi_to_audio import render_midi_to_audio
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -1,5 +1,5 @@
 # --------------------------------------------------------------
-# generate_tabs.py
+# midi_to_tabs.py
 # --------------------------------------------------------------
 """
 Convert MIDI file to guitar tablature (standard tuning).

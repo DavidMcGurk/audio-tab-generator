@@ -1,5 +1,5 @@
 # --------------------------------------------------------------
-# interpret_audio.py
+# audio_to_midi.py
 # --------------------------------------------------------------
 """
 Run basic_pitch on an audio file and write the resulting MIDI file.
