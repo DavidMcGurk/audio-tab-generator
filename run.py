@@ -94,7 +94,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"MIDI written to {midi_path}")
 
     # Generate guitar tabs
-    tab_path = midi_to_guitar_tab(midi_path=midi_path, out_dir=out_dir)
+    tab_path = midi_to_guitar_tab(midi_path=midi_path, out_dir=out_dir, quantisation=args.min_note_length)
 
     # Render → WAV / MP3
     if args.gen_wav or args.gen_mp3:

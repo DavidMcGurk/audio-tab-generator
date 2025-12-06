@@ -16,3 +16,4 @@ build/
 ._*
 
 output/
+e2e_tests/test_output/

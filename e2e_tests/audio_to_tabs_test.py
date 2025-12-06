@@ -35,7 +35,7 @@ class TestAudioToTabs:
                 "-o",
                 str(self.output_dir),
                 "--onset-threshold",
-                onset_threshold,  # type: ignore[list-item]
+                str(onset_threshold),
             ],
             cwd=self.project_root,
             capture_output=True,

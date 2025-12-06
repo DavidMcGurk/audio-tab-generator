@@ -7,6 +7,7 @@ from src.models.note import NoteCandidate, FinalNote
 def midi_to_guitar_tab(
     midi_path: pathlib.Path,
     out_dir: pathlib.Path,
+    quantisation: int,
     max_fret: int = 24,
 ) -> pathlib.Path:
     """
@@ -18,8 +19,10 @@ def midi_to_guitar_tab(
         Path to the input MIDI file.
     out_dir : Path
         Directory where the generated tablature (.txt) will be written.
+    qunatisation : int
+        Timeframe within which notes will be considered to be concurrent.
     max_fret : int, default 24
-        Highest fret number allowed when mapping notes to strings.
+        Highest fret number allowed when mapping notes to strings (not fully implemented yet)
 
     Returns
     -------
@@ -96,25 +99,28 @@ def midi_to_guitar_tab(
         idx += 1
 
     # Let cluster determine the optimal fingering for each group
-    final_notes: list[FinalNote] = []
-    for group in clusters:
-        cluster = NoteCluster(notes=group)
+    grouped_final_notes: list[list[FinalNote]] = []
+    for note_group in clusters:
+        cluster = NoteCluster(notes=note_group, quantisation=quantisation)
         cluster.assign_notes()
-        final_notes.extend(cluster.optimal)
+        grouped_final_notes.extend(cluster.grouped_final_notes)
 
     # Create and write tablature
     with out_file.open("w") as f:
         tab_lines = [[f"{STRING_NAMES[i]}|-"] for i in range(NUM_STRINGS)]
 
-        # Iterate cluster by cluster
-        for note in final_notes:
+        # Iterate through the groups
+        for final_group in grouped_final_notes:
             for s in range(1, 7):
-                if note.string == s:
-                    tab_lines[s - 1].append(f"{note.fret}")
-                    continue
+                string_written = False
+                for note in final_group:
+                    if note.string == s:
+                        tab_lines[s - 1].append(f"{note.fret}")
+                        string_written = True
+                        break
 
-                # Case 3: nothing happening on this string
-                tab_lines[s - 1].append("-")
+                if not string_written:
+                    tab_lines[s - 1].append("-")
 
             # Append separator
             for s in range(NUM_STRINGS):
