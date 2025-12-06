@@ -18,12 +18,12 @@ class TestAudioToTabs:
             f.unlink()
 
     def test_open_strings(self) -> None:
-        self._run_generation(input_file="open_strings.mp3")
+        self._run_generation(input_file="open_strings.mp3", onset_threshold=0.7)
 
     def test_hammer_ons(self) -> None:
-        self._run_generation(input_file="hammer_ons.m4a")
+        self._run_generation(input_file="hammer_ons.m4a", onset_threshold=0.4)
 
-    def _run_generation(self, input_file: str) -> None:
+    def _run_generation(self, input_file: str, onset_threshold: float) -> None:
         # Run CLI
         result = subprocess.run(
             [
@@ -31,10 +31,11 @@ class TestAudioToTabs:
                 "run",
                 "python",
                 "run.py",
-                "-i",
                 str(self.input_dir / input_file),
                 "-o",
                 str(self.output_dir),
+                "--onset-threshold",
+                onset_threshold,  # type: ignore[list-item]
             ],
             cwd=self.project_root,
             capture_output=True,

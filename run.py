@@ -24,10 +24,8 @@ from src.converters.midi_to_audio import render_midi_to_audio
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run basic_pitch → MIDI → audio (wav/mp3) pipeline.")
     parser.add_argument(
-        "-i",
-        "--input",
+        "input",
         type=pathlib.Path,
-        required=True,
         help="Path to the input audio (mp3, wav, …).",
     )
     parser.add_argument(
@@ -53,10 +51,19 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Additionally generated MP3 audio from the midi file.",
     )
-
-    parser.add_argument("--onset-threshold", type=float, default=0.75)
-    parser.add_argument("--frame-threshold", type=float, default=0.5)
-    parser.add_argument("--min-note-length", type=float, default=127.70)
+    parser.add_argument(
+        "--onset-threshold",
+        type=float,
+        default=0.4,
+        help="Tuning parameter determining how much energy is required for a note to register.",
+    )
+    parser.add_argument(
+        "--frame-threshold",
+        type=float,
+        default=0.4,
+        help="Tuning parameter determining how much energy is required for a frame to register.",
+    )
+    parser.add_argument("--min-note-length", type=float, default=150, help="Minimum note length in ms.")
 
     return parser
 

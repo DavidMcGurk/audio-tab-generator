@@ -1,6 +1,5 @@
 import pathlib
 import pretty_midi
-from typing import Optional
 from src.models.note_cluster import NoteCluster
 from src.models.note import NoteCandidate, FinalNote
 
@@ -97,47 +96,29 @@ def midi_to_guitar_tab(
         idx += 1
 
     # Let cluster determine the optimal fingering for each group
-    final_notes: list[list[FinalNote]] = []
+    final_notes: list[FinalNote] = []
     for group in clusters:
         cluster = NoteCluster(notes=group)
         cluster.assign_notes()
-        final_notes.append(cluster.optimal)
+        final_notes.extend(cluster.optimal)
 
     # Create and write tablature
     with out_file.open("w") as f:
         tab_lines = [[f"{STRING_NAMES[i]}|-"] for i in range(NUM_STRINGS)]
 
-        # Track currently ringing notes per string
-        # None = not ringing; otherwise store FinalNote
-        active_notes: dict[int, Optional[FinalNote]] = {}
-
         # Iterate cluster by cluster
-        for note_cluster in final_notes:
-            for note in note_cluster:
-                for s in range(1, 7):
-                    active = active_notes.get(s)
+        for note in final_notes:
+            for s in range(1, 7):
+                if note.string == s:
+                    tab_lines[s - 1].append(f"{note.fret}")
+                    continue
 
-                    # Case 1: Note is played on string
-                    if note.string == s:
-                        tab_lines[s - 1].append(f"{note.fret}")
-                        active_notes[s] = note
-                        continue
+                # Case 3: nothing happening on this string
+                tab_lines[s - 1].append("-")
 
-                    # Case 2: Note is ringing on string
-                    if active is not None:
-                        if active.end_time <= note.start_time:
-                            active_notes[s] = None
-                            tab_lines[s - 1].append("-")
-                        else:
-                            tab_lines[s - 1].append("~")
-                        continue
-
-                    # Case 3: nothing happening on this string
-                    tab_lines[s - 1].append("-")
-
-                # Append separator
-                for s in range(NUM_STRINGS):
-                    tab_lines[s - 1].append("-")
+            # Append separator
+            for s in range(NUM_STRINGS):
+                tab_lines[s - 1].append("-")
 
         # Finalize output
         tab_text = "\n".join("".join(line) for line in tab_lines[::-1])
