@@ -54,7 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--onset-threshold",
         type=float,
-        default=0.4,
+        default=0.5,
         help="Tuning parameter determining how much energy is required for a note to register.",
     )
     parser.add_argument(
