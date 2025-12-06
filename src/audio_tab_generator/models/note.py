@@ -1,6 +1,3 @@
-from typing import Optional
-
-
 class UnplayableError(Exception):
     """Raised when a note cannot be played on the instrument."""
 
@@ -8,20 +5,11 @@ class UnplayableError(Exception):
 
 
 class Note:
-    """Basic timed note with optional assigned output value. Also used for final values."""
+    """Basic timed note."""
 
-    def __init__(self, start_time: float, end_time: float, value: Optional[int] = None) -> None:
+    def __init__(self, start_time: float, end_time: float) -> None:
         self.start_time = start_time
         self.end_time = end_time
-        self.value = value
-
-    def set_final_value(self, value: int) -> None:
-        self.value = value
-
-    def get_final_value(self) -> int:
-        if self.value is None:
-            raise ValueError("Final value has not been set.")
-        return self.value
 
 
 class NoteCandidate(Note):
@@ -43,3 +31,26 @@ class NoteCandidate(Note):
 
         if all(v == -1 for v in candidates):
             raise UnplayableError("This note is unplayable in current tuning.")
+
+    def to_final_note(self, string: int, fret: int):
+        return FinalNote(start_time=self.start_time, end_time=self.end_time, string=string, fret=fret)
+
+
+class FinalNote(Note):
+    """
+    The final note, with the calcualted location (string, fret) of where to play.
+
+    """
+
+    def __init__(self, string: int, fret: int, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.string = string
+        self.fret = fret
+
+    def __eq__(self, other) -> bool:
+        return (
+            self.start_time == other.start_time
+            and self.end_time == other.end_time
+            and self.string == other.string
+            and self.fret == other.fret
+        )
