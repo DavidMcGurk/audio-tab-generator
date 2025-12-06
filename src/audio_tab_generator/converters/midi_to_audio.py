@@ -1,15 +1,3 @@
-# --------------------------------------------------------------
-# midi_to_audio.py
-# --------------------------------------------------------------
-"""
-Render a MIDI file to WAV (using FluidSynth) and optionally convert to MP3.
-
-Public helpers:
-    * :func:`midi_to_wav`
-    * :func:`wav_to_mp3`
-    * :func:`render_midi_to_audio`
-"""
-
 import pathlib
 
 from pydub import AudioSegment
@@ -65,7 +53,7 @@ def wav_to_mp3(
     bitrate: str = "192k",
 ) -> pathlib.Path:
     """
-    Convert a WAV file to MP3 using *ffmpeg* (via pydub).
+    Convert a WAV file to MP3 using ffmpeg
 
     Returns
     -------

@@ -1,83 +1,85 @@
-import numpy as np
-from audio_tab_generator.models.note import NoteCandidate
+from __future__ import annotations
 import itertools
+import numpy as np
 from typing import Optional
+from audio_tab_generator.models.note import NoteCandidate, UnplayableError
 
-MAX_STRETCH = 4  # largest gap between frets playable in a single chord
-
-
-class UnplayableError(Exception):
-    pass
+MAX_STRETCH = 4  # maximum allowed fret span
 
 
 class Chord:
-    def __init__(self, notes: list[NoteCandidate]) -> None:
-        self.notes = notes  # in 'chord'
-        self.playable_permutations: Optional[list] = None  # ways of playing the chord which are actually feasible
-        self.optimal: list = []
+    """
+    Chord model for computing playable and optimal string assignments
+    for simultaneous notes in standard-tuned guitar. Note, here 'chord'
+    refers to a cluster of 1 or more notes played with overlapping timing.
+    """
 
+    def __init__(self, notes: list[NoteCandidate]) -> None:
         if len(notes) > 6:
-            raise NotImplementedError(
-                "The program cannot currently deal with 'chords' which are more than 6 notes at " "one time!"
-            )
+            raise NotImplementedError("Chords larger than 6 notes are not supported.")
+
+        self.notes = notes
+        self.playable_permutations: Optional[list[list[int]]] = None
+        self.optimal: list[int] = []
 
     def find_playable_chords(self) -> None:
-        perms = self._find_valid_permutations([note.candidates for note in self.notes])
-        playable_permutations = []
-        for idx, perm in enumerate(perms):
-            low, high = np.Inf, -1
-            for note in perm:
-                if note <= 0:
-                    continue  # note either not played or can always be played on open string
+        """Generate and filter permutations to retain only playable chord shapes."""
 
-                if note > high:
-                    high = note
-                if note < low:
-                    low = note
+        perms = self._find_valid_permutations([n.candidates for n in self.notes])
+        playable: list[list[int]] = []
 
-            if low == np.Inf or high - low <= MAX_STRETCH:
-                playable_permutations.append(perm)
+        for perm in perms:
+            fretted = [f for f in perm if f > 0]
+            if not fretted or max(fretted) - min(fretted) <= MAX_STRETCH:
+                playable.append(perm)
 
-        if not playable_permutations:
-            raise UnplayableError("Chord cannot be played!")
-        self.playable_permutations = playable_permutations
+        if not playable:
+            raise UnplayableError("No playable fingering for chord.")
+
+        self.playable_permutations = playable
 
     def find_optimal(self) -> None:
+        """Select the permutation with minimal overall fret cost."""
+
         if self.playable_permutations is None:
             self.find_playable_chords()
+
         best_score = np.Inf
+        best_perm: list[int] = []
 
-        for perm in self.playable_permutations:  # type: ignore[union-attr]
-            total = sum(note for note in perm if note != -1)
-            if total < best_score:
-                optimal = perm
-                best_score = total
+        for perm in self.playable_permutations:  # type: ignore
+            score = sum(f for f in perm if f != -1)
+            if score < best_score:
+                best_score = score
+                best_perm = perm
 
-        self.optimal = optimal
+        self.optimal = best_perm
 
-    def _find_valid_permutations(self, note_possibilities: list) -> list:
-        if not note_possibilities:
+    def _find_valid_permutations(self, candidates_per_note: list[list[int]]) -> list[list[int]]:
+        """Generate all assignments ensuring no two notes share a string."""
+
+        if not candidates_per_note:
             return []
 
-        all_choices: list[list[tuple[int, int]]] = []
-        max_len = max(len(token) for token in note_possibilities)
-
-        for note in note_possibilities:
-            choices = [(i, v) for i, v in enumerate(note) if v >= 0]
-            if not choices:
+        choice_groups = []
+        for candidates in candidates_per_note:
+            valid = [(i, f) for i, f in enumerate(candidates) if f >= 0]
+            if not valid:
                 return []
-            all_choices.append(choices)
+            choice_groups.append(valid)
 
         permutations = []
+        max_len = max(len(c) for c in candidates_per_note)
 
-        for selection in itertools.product(*all_choices):
-            indices = [tpl[0] for tpl in selection]
-            if len(set(indices)) != len(indices):
+        for combo in itertools.product(*choice_groups):
+            strings = [idx for idx, _ in combo]
+            if len(set(strings)) != len(strings):
                 continue
 
             perm = [-1] * max_len
-            for idx, val in selection:
-                perm[idx] = val
+            for idx, fret in combo:
+                perm[idx] = fret
+
             permutations.append(perm)
 
         return permutations

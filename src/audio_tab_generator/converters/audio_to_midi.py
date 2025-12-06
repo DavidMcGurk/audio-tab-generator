@@ -1,12 +1,3 @@
-# --------------------------------------------------------------
-# audio_to_midi.py
-# --------------------------------------------------------------
-"""
-Run basic_pitch on an audio file and write the resulting MIDI file.
-
-The public function is :func:`predict_to_midi`.
-"""
-
 import pathlib
 from typing import Optional
 
@@ -35,7 +26,7 @@ def predict_to_midi(
     midi_path : pathlib.Path
         Full path of the written MIDI file.
     note_events : list
-        The raw note‑event list returned by ``basic_pitch`` (useful for debugging).
+        The raw note‑event list returned by ``basic_pitch`` (for debugging).
     """
     audio_path = pathlib.Path(audio_path).expanduser().resolve()
     out_dir = pathlib.Path(out_dir).expanduser().resolve()
