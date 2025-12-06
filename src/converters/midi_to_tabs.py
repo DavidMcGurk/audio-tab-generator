@@ -1,8 +1,8 @@
 import pathlib
 import pretty_midi
 from typing import Optional
-from audio_tab_generator.models.note_cluster import NoteCluster
-from audio_tab_generator.models.note import NoteCandidate, FinalNote
+from src.models.note_cluster import NoteCluster
+from src.models.note import NoteCandidate, FinalNote
 
 
 def midi_to_guitar_tab(
@@ -140,7 +140,7 @@ def midi_to_guitar_tab(
                     tab_lines[s - 1].append("-")
 
         # Finalize output
-        tab_text = "\n".join("".join(line) for line in tab_lines)
+        tab_text = "\n".join("".join(line) for line in tab_lines[::-1])
         f.write(tab_text)
 
     return out_file

@@ -1,4 +1,4 @@
-from audio_tab_generator.models.note import NoteCandidate, FinalNote
+from src.models.note import NoteCandidate, FinalNote
 
 from .note_cluster import NoteCluster
 

@@ -16,9 +16,9 @@ import argparse
 import pathlib
 import sys
 
-from audio_tab_generator.converters.midi_to_tabs import midi_to_guitar_tab
-from audio_tab_generator.converters.audio_to_midi import predict_to_midi
-from audio_tab_generator.converters.midi_to_audio import render_midi_to_audio
+from src.converters.midi_to_tabs import midi_to_guitar_tab
+from src.converters.audio_to_midi import predict_to_midi
+from src.converters.midi_to_audio import render_midi_to_audio
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -57,7 +57,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--onset-threshold", type=float, default=0.75)
     parser.add_argument("--frame-threshold", type=float, default=0.5)
     parser.add_argument("--min-note-length", type=float, default=127.70)
-    parser.add_argument("--melodia-trick", action="store_true", default=True)
 
     return parser
 
@@ -80,7 +79,6 @@ def main(argv: list[str] | None = None) -> int:
             onset_threshold=args.onset_threshold,
             frame_threshold=args.frame_threshold,
             minimum_note_length=args.min_note_length,
-            melodia_trick=args.melodia_trick,
         )
     except Exception as exc:
         print(f"basic_pitch failed: {exc}", file=sys.stderr)

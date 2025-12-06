@@ -1,5 +1,5 @@
 import itertools
-from audio_tab_generator.models.note import NoteCandidate, FinalNote, UnplayableError
+from src.models.note import NoteCandidate, FinalNote, UnplayableError
 
 MAX_STRETCH = 4  # max allowed fret span
 
