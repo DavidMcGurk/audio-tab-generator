@@ -11,9 +11,11 @@ build/
 .env
 .env.local
 .venv
+**.iml
 
 .DS_Store
 ._*
+.idea/
 
 output/
 e2e_tests/test_output/
